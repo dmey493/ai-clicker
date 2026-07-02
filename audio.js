@@ -75,13 +75,14 @@ const Sfx = (() => {
     { type: 'sine',     notes: [659, 831, 988, 1319],  dur: 0.10, vol: 0.042, detune: 5 },
   ];
 
-  function click(era) {
+  function click(era, momentum) {
     if (!enabled || !ctx) return;
     const t = performance.now();
     if (t - lastClickAt < 70) return; /* don't shred ears during click storms */
     lastClickAt = t;
     const v = CLICK_VOICES[Math.min(era, CLICK_VOICES.length - 1)];
-    const jit = 0.97 + Math.random() * 0.06;
+    /* pitch rises as momentum builds — you can hear the ramp */
+    const jit = (0.97 + Math.random() * 0.06) * (1 + (momentum || 0) * 0.16);
     v.notes.forEach((n, i) => tone({
       f: n * jit, at: i * 0.028, dur: v.dur, type: v.type,
       vol: v.vol, filter: v.filter || 0, detune: v.detune || 0,

@@ -210,13 +210,13 @@ const UPGRADES = [];
     { id: 'clk3', name: 'Macro Pad', flavor: 'A single key labeled MONEY. You press it.',
       cost: 90000, kind: 'click', mult: 2, glyph: 'MP', effect: 'Clicking power ×2' },
     { id: 'clk4', name: 'Neural Lace (beta)', flavor: 'Think at your AI. Side effects include thinking.',
-      cost: 150e3, kind: 'clickpct', add: 0.03, glyph: 'NL', effect: 'Clicks earn +3% more of your $/sec' },
+      cost: 150e3, kind: 'clickpct', add: 0.04, glyph: 'NL', effect: 'Clicks earn +4% more of your $/sec' },
     { id: 'clk5', name: 'Thought Piping', flavor: 'Cut out the middleman. The middleman was your hands.',
-      cost: 20e6, kind: 'clickpct', add: 0.04, glyph: 'TP', effect: 'Clicks earn +4% more of your $/sec' },
+      cost: 20e6, kind: 'clickpct', add: 0.06, glyph: 'TP', effect: 'Clicks earn +6% more of your $/sec' },
     { id: 'clk6', name: 'Intent Prediction', flavor: 'It clicks before you do. You feel obsolete. You are.',
-      cost: 2e9, kind: 'clickpct', add: 0.05, glyph: 'IP', effect: 'Clicks earn +5% more of your $/sec' },
+      cost: 2e9, kind: 'clickpct', add: 0.08, glyph: 'IP', effect: 'Clicks earn +8% more of your $/sec' },
     { id: 'clk7', name: 'You, But Faster', flavor: 'CLAWD made a copy of you that only clicks. It is you. It clicks.',
-      cost: 1e12, kind: 'clickpct', add: 0.06, glyph: 'YF', effect: 'Clicks earn +6% more of your $/sec' },
+      cost: 1e12, kind: 'clickpct', add: 0.10, glyph: 'YF', effect: 'Clicks earn +10% more of your $/sec' },
 
     { id: 'glb1', name: 'Prompt Engineering Certificate', flavor: 'It is laminated.',
       cost: 100e3, kind: 'global', mult: 1.25, glyph: 'PE', effect: 'All production ×1.25' },
@@ -497,8 +497,8 @@ function recalc() {
   const clickFlat =
     UPGRADES.filter((u) => u.kind === 'click' && run.upgrades[u.id])
       .reduce((m, u) => m * u.mult, 1);
-  /* clicks always earn a baseline 2% of $/sec so clicking stays worth it; upgrades raise it */
-  const clickPct = 0.02 +
+  /* clicks always earn a baseline 4% of $/sec so clicking stays worth it; upgrades raise it */
+  const clickPct = 0.04 +
     UPGRADES.filter((u) => u.kind === 'clickpct' && run.upgrades[u.id])
       .reduce((s, u) => s + u.add, 0);
 
@@ -507,7 +507,9 @@ function recalc() {
   C.clickBuffMult = clickBuff;
   C.effRate = rate * prodBuff;
   C.clickPct = clickPct;
-  C.click = (clickFlat * globalMult + C.effRate * clickPct) * clickBuff;
+  C.clickBase = clickFlat * globalMult + C.effRate * clickPct;
+  C.clickStormMult = clickBuff; /* ×77 during Click Storms */
+  C.click = C.clickBase * clickBuff;
 }
 
 function currentGlobalMult() {
@@ -525,6 +527,16 @@ function buildingMult(bId) {
     }
   }
   return m;
+}
+
+/* Momentum: sustained clicking ramps click power up to ×2.5; drains when you stop.
+   Click Storms replace momentum rather than stacking with it. */
+let momentum = 0;
+const MOMENTUM_MAX_MULT = 1.5; /* +150% at full momentum */
+
+function clickNow() {
+  if (C.clickStormMult > 1) return C.clickBase * C.clickStormMult;
+  return C.clickBase * (1 + momentum * MOMENTUM_MAX_MULT);
 }
 
 const ownedTotal = () => Object.values(run.buildings).reduce((a, b) => a + b, 0);
@@ -856,13 +868,14 @@ function buyUpgrade(u) {
 let lastClickAt = 0, clickStreak = 0, excitedUntil = 0;
 
 function sparkClick(e) {
-  const gain = C.click;
-  Sfx.click(run.era);
+  const gain = clickNow();
+  Sfx.click(run.era, momentum);
   run.money += gain;
   run.earned += gain;
   meta.allEarned += gain;
   run.clicks += 1;
   run.clickEarned += gain;
+  momentum = Math.min(1, momentum + 0.025);
 
   /* fast clicking gets CLAWD visibly excited */
   const t = now();
@@ -1161,8 +1174,8 @@ function renderStats() {
     ['Earned this cycle', $$$(run.earned)],
     ['Earned all time', $$$(meta.allEarned)],
     ['Per second', $$$(C.effRate) + '/s'],
-    ['Per click', $$$(C.click)],
-    ['Click bonus', `${Math.round(C.clickPct * 100)}% of $/sec per click`],
+    ['Per click', $$$(clickNow())],
+    ['Click bonus', `${Math.round(C.clickPct * 100)}% of $/sec per click, up to ×2.5 with momentum`],
     ['Clicks', fmt(run.clicks)],
     ['Earned by clicking', $$$(run.clickEarned)],
     ['Breakthroughs claimed', fmt(run.gold)],
@@ -1384,7 +1397,9 @@ function updateHud() {
   }
   const r = $$$(C.effRate) + '/sec' + (C.prodBuffMult > 1 ? ` (×${fmt(C.prodBuffMult)})` : '');
   if (r !== lastRateStr) { lastRateStr = r; ui.rateDisplay.textContent = r; }
-  const c = $$$(C.click) + '/click';
+  const momMult = 1 + momentum * MOMENTUM_MAX_MULT;
+  const momSuffix = C.clickStormMult <= 1 && momentum > 0.03 ? ` · momentum ×${momMult.toFixed(1)}` : '';
+  const c = $$$(clickNow()) + '/click' + momSuffix;
   if (c !== lastClickStr) { lastClickStr = c; ui.clickDisplay.textContent = c; }
   if (now() - lastTitleAt > 1000) {
     lastTitleAt = now();
@@ -1424,6 +1439,11 @@ function tick() {
   if (excitedUntil && t > excitedUntil) {
     excitedUntil = 0;
     ui.sparkBtn.classList.remove('is-excited');
+  }
+
+  /* momentum drains once you stop clicking (0.7s grace) */
+  if (momentum > 0 && t - lastClickAt > 700) {
+    momentum = Math.max(0, momentum - dt * 0.8);
   }
 
   if (storeDirty) renderStore();

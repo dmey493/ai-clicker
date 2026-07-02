@@ -15,7 +15,7 @@ const TIER_COST = [10, 60, 600, 8e3, 100e3, 1.2e6];
 const TIER_REQ = [1, 10, 25, 50, 100, 150];
 const CLICK_UPS = [ // [cost, kind, value]
   [600, 'flat', 2], [8e3, 'flat', 2], [90e3, 'flat', 2],
-  [150e3, 'pct', 0.03], [20e6, 'pct', 0.04], [2e9, 'pct', 0.05], [1e12, 'pct', 0.06],
+  [150e3, 'pct', 0.04], [20e6, 'pct', 0.06], [2e9, 'pct', 0.08], [1e12, 'pct', 0.10],
 ];
 const GLOBALS = [
   [100e3, 1.25], [10e6, 1.3], [50e6, 1.35], [1e9, 1.4], [20e9, 1.5], [100e9, 1.5],
@@ -28,7 +28,8 @@ const SYN_PCT = 0.05;
 const GOLD_MIN = 120, GOLD_MAX = 240, GOLD_FREQ_MULT = 0.65;
 const FRENZY_MULT = 7, FRENZY_SECS = 45, STORM_MULT = 77, STORM_SECS = 13, DUR_MULT = 1.5;
 const WINDFALL_BANK = 0.15, WINDFALL_SECS = 600;
-const BASE_CLICK_PCT = 0.02;
+const BASE_CLICK_PCT = 0.04;
+const MOMENTUM_MULT = 2.5; /* sustained clicker holds full momentum */
 const ERAS = [
   ['Garage', 0], ['Startup', 50e3], ['Corporation', 5e6], ['Automation Age', 250e6],
   ['Post-Labor', 15e9], ['Awakening', 1e12], ['Singularity', 75e12],
@@ -66,7 +67,8 @@ function rate() {
 function effRate() { return rate() * (S.t < S.frenzyUntil ? FRENZY_MULT : 1); }
 function clickPower() {
   const c = S.clickFlat * S.globalMult + effRate() * S.clickPct;
-  return c * (S.t < S.stormUntil ? STORM_MULT : 1);
+  /* storms replace momentum; otherwise a dedicated clicker holds full momentum */
+  return c * (S.t < S.stormUntil ? STORM_MULT : MOMENTUM_MULT);
 }
 function buildingCost(i) { return BUILDINGS[i][1] * Math.pow(GROWTH, S.counts[i]); }
 
