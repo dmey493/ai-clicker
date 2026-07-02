@@ -22,12 +22,13 @@ const Factory = (() => {
     h: '#6B563F', v: '#A56BD6', n: '#14111E',
   };
 
-  /* mood: 0 garage-warm · 1 corporate · 2 ominous · 3 post-reality */
+  /* mood: 0 clean workshop · 1 sterile corporate · 2 clinical-insidious · 3 sleek void
+     The facility stays CLEAN throughout — menace comes from light and color, not grime. */
   const MOODS = [
-    { floor: '#B3A48D', floor2: '#A89A84', wall: '#5C4F3F', wallTop: '#776853', sky: '#A8C6E0', lamp: '#E9B44C' },
-    { floor: '#9C948A', floor2: '#918A80', wall: '#4E4A44', wallTop: '#67625A', sky: '#9FB6C9', lamp: '#E9B44C' },
-    { floor: '#7E7266', floor2: '#74695E', wall: '#413931', wallTop: '#564C42', sky: '#8E5A50', lamp: '#D6493C' },
-    { floor: '#57504A', floor2: '#4E4842', wall: '#332D27', wallTop: '#453E36', sky: '#14111E', lamp: '#D6493C' },
+    { floor: '#DCD5C3', floor2: '#D3CBB8', wall: '#94836A', wallTop: '#AC9A7E', sky: '#A8C6E0', lamp: '#E9B44C' },
+    { floor: '#E5E2DA', floor2: '#DCD9D0', wall: '#7C7972', wallTop: '#949088', sky: '#9FB6C9', lamp: '#E9B44C' },
+    { floor: '#E0DDD8', floor2: '#D5D2CC', wall: '#5F5B5C', wallTop: '#747071', sky: '#8E5A50', lamp: '#D6493C' },
+    { floor: '#454049', floor2: '#3C3740', wall: '#2A2630', wallTop: '#3A3542', sky: '#14111E', lamp: '#D6493C' },
   ];
   const moodFor = (era) => era >= 6 ? 3 : era >= 4 ? 2 : era >= 2 ? 1 : 0;
 
@@ -901,8 +902,9 @@ const Factory = (() => {
       for (let x = tx0; x < tx1; x++) {
         ctx.fillStyle = (x + y) % 2 ? M.floor : M.floor2;
         ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
-        if ((x * 7 + y * 13) % 11 === 0) {
-          ctx.fillStyle = 'rgba(0,0,0,0.07)';
+        /* only the garage era gets workshop dust — after that the floors are kept clean */
+        if (world.mood === 0 && (x * 7 + y * 13) % 11 === 0) {
+          ctx.fillStyle = 'rgba(0,0,0,0.06)';
           ctx.fillRect(x * TILE + 4, y * TILE + 9, 3, 2);
         }
       }
@@ -1058,6 +1060,7 @@ const Factory = (() => {
     window.addEventListener('keyup', onKeyUp);
     window.addEventListener('resize', resize);
     $('factoryClose').focus();
+    if (typeof Sfx !== 'undefined') Sfx.humStart(world.mood);
     lastT = performance.now();
     rafId = requestAnimationFrame(loop);
   }
@@ -1067,6 +1070,7 @@ const Factory = (() => {
     open_ = false;
     cancelAnimationFrame(rafId);
     keys.clear();
+    if (typeof Sfx !== 'undefined') Sfx.humStop();
     root.hidden = true;
     document.body.classList.remove('factory-open');
     window.removeEventListener('keydown', onKeyDown);

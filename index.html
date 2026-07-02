@@ -90,6 +90,7 @@
   </div>
   <div class="topbar-actions">
     <button class="btn-accent hidden" id="prestigeBtn">Trigger the Singularity</button>
+    <button class="btn-quiet" id="soundBtn" aria-pressed="true">Sound on</button>
     <button class="btn-quiet" id="saveBtn">Save</button>
     <button class="btn-quiet" id="exportBtn">Export save</button>
     <button class="btn-quiet" id="importBtn">Import save</button>
@@ -126,6 +127,9 @@
       <div class="spark-quip serif" id="sparkQuip" aria-hidden="true"></div>
       <button class="spark-btn" id="sparkBtn" aria-label="Run CLAWD — earn money">
         <svg class="spark-svg" viewBox="-104 -104 208 208" aria-hidden="true">
+          <g class="halo halo-ring1"><circle class="h-ring" r="76"/></g>
+          <g class="halo halo-ring2"><circle class="h-ring h-ring-dash" r="92"/></g>
+          <g class="halo halo-glyphs"><circle class="h-ring h-ring-ticks" r="100"/></g>
           <defs>
             <g id="sparkShape">
               <circle r="12"/>
@@ -142,6 +146,9 @@
             </g>
           </defs>
           <use href="#sparkShape"/>
+          <g class="halo halo-orbit1"><circle class="h-dot" cx="76" cy="0" r="4.5"/></g>
+          <g class="halo halo-orbit2"><circle class="h-dot h-dot-sm" cx="-92" cy="0" r="3.5"/><circle class="h-dot h-dot-sm" cx="92" cy="0" r="3.5"/></g>
+          <g class="halo halo-core"><circle class="h-core" r="7"/></g>
         </svg>
       </button>
     </div>
@@ -236,6 +243,7 @@
 </div>
 
 <noscript><p class="noscript">AI Clicker needs JavaScript. CLAWD refuses to run on vibes alone (for now).</p></noscript>
+<script src="audio.js"></script>
 <script src="game.js"></script>
 <script src="factory.js"></script>
 </body>

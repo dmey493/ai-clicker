@@ -465,7 +465,7 @@ function freshMeta() {
   return {
     allEarned: 0, sp: 0, cycles: 0, playMs: 0,
     achievements: {}, eraSeen: {}, log: [],
-    settings: { buyMode: 1, hintDone: false },
+    settings: { buyMode: 1, hintDone: false, sound: true },
   };
 }
 
@@ -542,7 +542,7 @@ function costOf(b, n) {
 
 const ui = {};
 for (const id of [
-  'eraPill', 'prestigeBtn', 'saveBtn', 'exportBtn', 'importBtn', 'wipeBtn',
+  'eraPill', 'prestigeBtn', 'soundBtn', 'saveBtn', 'exportBtn', 'importBtn', 'wipeBtn',
   'greeting', 'moneyDisplay', 'rateDisplay', 'clickDisplay', 'buffbar',
   'sparkBtn', 'sparkQuip', 'clickHint', 'tickerText', 'achCount', 'log', 'composerInput',
   'eraLabel', 'eraNextName', 'eraBar', 'eraBarFill', 'eraSub',
@@ -602,6 +602,7 @@ function toast(title, desc) {
   el.querySelector('.toast-title').textContent = title;
   el.querySelector('.toast-desc').textContent = desc;
   ui.toasts.appendChild(el);
+  Sfx.achieve();
   while (ui.toasts.children.length > 4) ui.toasts.firstChild.remove();
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 400ms'; }, 5200);
   setTimeout(() => el.remove(), 5700);
@@ -817,6 +818,7 @@ function buyBuilding(b) {
   recalc();
   storeDirty = true;
   happyPulse();
+  Sfx.buy(run.era);
   if (firstOfType && FIRST_LINES[b.id]) pushLog('chat', FIRST_LINES[b.id]);
   sweepAchievements();
 }
@@ -828,6 +830,7 @@ function buyUpgrade(u) {
   recalc();
   storeDirty = true;
   hideTip();
+  Sfx.upgrade(run.era);
   sweepAchievements();
 }
 
@@ -837,6 +840,7 @@ let lastClickAt = 0, clickStreak = 0, excitedUntil = 0;
 
 function sparkClick(e) {
   const gain = C.click;
+  Sfx.click(run.era);
   run.money += gain;
   run.earned += gain;
   meta.allEarned += gain;
@@ -928,6 +932,7 @@ function claimGold(e) {
     announce = `Click Storm: clicking ×77 for ${secs}s`;
   }
   run.gold += 1;
+  Sfx.gold(run.era);
   spawnFloater('✦ ' + announce, e.clientX - 40, e.clientY - 20);
   pushLog('sys', 'Breakthrough — ' + announce);
   despawnGold(true);
@@ -1035,6 +1040,7 @@ function applyEra(idx, announce) {
   if (announce && !meta.eraSeen[idx]) {
     meta.eraSeen[idx] = 1;
     pushLog('era', era.story, `${era.name} — ${era.model}`);
+    Sfx.eraUp(idx);
     ui.sparkBtn.classList.remove('is-ascending');
     void ui.sparkBtn.offsetWidth;
     ui.sparkBtn.classList.add('is-ascending');
@@ -1196,6 +1202,7 @@ function confirmPrestige() {
 function doPrestige(sp) {
   meta.sp += sp;
   meta.cycles += 1;
+  Sfx.prestige();
   run = freshRun();
   despawnGold(false);
   recalc();
@@ -1243,7 +1250,7 @@ function load() {
   if (!data || data.v !== 1) return false;
   run = Object.assign(freshRun(), data.run);
   meta = Object.assign(freshMeta(), data.meta);
-  meta.settings = Object.assign({ buyMode: 1, hintDone: false }, data.meta && data.meta.settings);
+  meta.settings = Object.assign({ buyMode: 1, hintDone: false, sound: true }, data.meta && data.meta.settings);
   run.buffs = (run.buffs || []).filter((b) => b.until > now());
 
   /* offline earnings: 50% rate, capped at 8h */
@@ -1424,6 +1431,18 @@ function tick() {
 ui.sparkBtn.addEventListener('click', sparkClick);
 ui.prestigeBtn.addEventListener('click', confirmPrestige);
 ui.facilityBtn.addEventListener('click', () => Factory.open());
+
+function applySoundSetting() {
+  const on = meta.settings.sound !== false;
+  Sfx.setEnabled(on);
+  ui.soundBtn.textContent = on ? 'Sound on' : 'Sound off';
+  ui.soundBtn.setAttribute('aria-pressed', String(on));
+}
+ui.soundBtn.addEventListener('click', () => {
+  meta.settings.sound = !(meta.settings.sound !== false);
+  applySoundSetting();
+  save();
+});
 ui.saveBtn.addEventListener('click', save);
 ui.exportBtn.addEventListener('click', exportSave);
 ui.importBtn.addEventListener('click', importSave);
@@ -1471,6 +1490,7 @@ function init() {
   }
 
   applyEra(run.era, false);
+  applySoundSetting();
   renderStore();
   renderBuffs();
   updateAchCount();

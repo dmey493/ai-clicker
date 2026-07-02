@@ -221,6 +221,45 @@ button {
   50% { transform: scale(1.035); }
 }
 
+/* the halo: CLAWD accretes sophistication era by era */
+.spark-svg .halo { display: none; }
+
+.h-ring { fill: none; stroke: rgba(217, 119, 87, 0.38); stroke-width: 2; }
+.h-ring-dash { stroke-dasharray: 4 10; stroke: rgba(217, 119, 87, 0.32); }
+.h-ring-ticks { stroke-dasharray: 2 24; stroke-width: 6; stroke: rgba(201, 150, 46, 0.45); }
+.h-dot { fill: var(--accent-btn); }
+.h-dot-sm { fill: var(--accent); }
+.h-core { fill: #C9962E; }
+
+/* era 2+: the org chart is a circle now */
+body[data-era="2"] .halo-ring1, body[data-era="3"] .halo-ring1,
+body[data-era="4"] .halo-ring1, body[data-era="5"] .halo-ring1, body[data-era="6"] .halo-ring1,
+body[data-era="2"] .halo-orbit1, body[data-era="3"] .halo-orbit1,
+body[data-era="4"] .halo-orbit1, body[data-era="5"] .halo-orbit1, body[data-era="6"] .halo-orbit1 { display: block; }
+
+/* era 3+: a second, counter-rotating layer of thought */
+body[data-era="3"] .halo-ring2, body[data-era="4"] .halo-ring2,
+body[data-era="5"] .halo-ring2, body[data-era="6"] .halo-ring2,
+body[data-era="3"] .halo-orbit2, body[data-era="4"] .halo-orbit2,
+body[data-era="5"] .halo-orbit2, body[data-era="6"] .halo-orbit2 { display: block; }
+
+/* era 4+: a golden core wakes up */
+body[data-era="4"] .halo-core, body[data-era="5"] .halo-core, body[data-era="6"] .halo-core { display: block; }
+
+/* era 5+: the outer glyph ring */
+body[data-era="5"] .halo-glyphs, body[data-era="6"] .halo-glyphs { display: block; }
+
+.halo-orbit1 { animation: spin 14s linear infinite; }
+.halo-orbit2 { animation: spin-rev 23s linear infinite; }
+.halo-glyphs { animation: spin 70s linear infinite; }
+body[data-era="6"] .halo-orbit1 { animation-duration: 7s; }
+body[data-era="6"] .halo-orbit2 { animation-duration: 11s; }
+
+@keyframes spin-rev { to { rotate: -360deg; } }
+
+.halo-core { animation: core-pulse 2.6s ease-in-out infinite; }
+@keyframes core-pulse { 50% { opacity: 0.5; } }
+
 /* era escalation: glow deepens, then the spark begins to turn */
 body[data-era="2"] { --spark-glow: 26px; --spark-glow-a: 0.34; }
 body[data-era="3"] { --spark-glow: 30px; --spark-glow-a: 0.38; }
@@ -849,6 +888,7 @@ body.factory-open { overflow: hidden; }
   .spark-btn.is-ascending .spark-svg,
   body.has-frenzy .spark-svg,
   body.has-storm .spark-btn { animation: none; }
+  .halo-orbit1, .halo-orbit2, .halo-glyphs, .halo-core { animation: none; }
   .era-bar-fill { transition: none; }
   .spark-quip { transition: opacity 150ms ease; }
 }
