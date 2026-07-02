@@ -1083,7 +1083,22 @@ const Factory = (() => {
     }
   }
 
-  return { open, close, isOpen: () => open_ };
+  return {
+    open, close, isOpen: () => open_,
+    press: (dir) => keys.add(dir),
+    release: (dir) => keys.delete(dir),
+  };
 })();
 
 document.getElementById('factoryClose').addEventListener('click', Factory.close);
+
+/* touch D-pad — hold to walk */
+for (const b of document.querySelectorAll('#factoryDpad .dpad-b')) {
+  const dir = b.dataset.dir;
+  const press = (e) => { e.preventDefault(); Factory.press(dir); };
+  const release = (e) => { e.preventDefault(); Factory.release(dir); };
+  b.addEventListener('pointerdown', press);
+  b.addEventListener('pointerup', release);
+  b.addEventListener('pointercancel', release);
+  b.addEventListener('pointerleave', release);
+}

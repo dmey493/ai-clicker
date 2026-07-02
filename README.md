@@ -19,15 +19,19 @@ server. No install, no build step, no dependencies.
   eras as your all-time earnings grow: The Garage → The Startup → The Corporation →
   The Automation Age → The Post-Labor Era → The Awakening → The Singularity.
 - **Walk your factory** — "Enter the Facility" opens an 8-bit factory floor with every
-  automation you own as animated pixel machinery. WASD / arrows to walk, Esc to leave.
-  The decor gets… less reassuring as the eras advance. Keep an eye on the eye.
+  automation you own as animated pixel machinery. WASD / arrows to walk (on-screen D-pad
+  on phones), Esc or "Leave the floor" to exit. The decor gets… less reassuring as the
+  eras advance. Keep an eye on the eye.
+- **Plays on phones** — the layout reflows for small screens; on touch screens, tapping an
+  upgrade previews it first and a second tap buys it.
 - **Trigger the Singularity** — once you're rich enough (around $1 trillion earned), a button
   appears in the header. Reset everything for Singularity Points: +10% production each,
   permanently, across every future cycle.
 
 ## Saving
 
-- Autosaves every 30 seconds and when you close the tab (localStorage).
+- Autosaves every 10 seconds, after every purchase, and the moment you switch away or
+  close the tab — you never need to press Save (localStorage).
 - Closes don't stop CLAWD: you earn offline at 50% rate, capped at 8 hours.
 - **Export save / Import save** in the header moves progress between browsers.
 - **Wipe save** starts over. CLAWD will not remember you. That's the scary part, isn't it.

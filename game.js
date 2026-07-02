@@ -679,6 +679,9 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, 
 
 let storeDirty = true;
 let lastStoreSig = '';
+/* touch screens: first tap on an upgrade previews it, second tap buys */
+const COARSE = window.matchMedia('(pointer: coarse)').matches;
+let pendingUpgradeTap = null, pendingTapTimer = null;
 const buildingEls = new Map(); // id -> {row, costEl, metaEl, ownedEl}
 const upgradeEls = new Map();  // id -> tile
 
@@ -761,7 +764,19 @@ function renderStore() {
     tile.type = 'button';
     tile.textContent = u.glyph;
     tile.setAttribute('aria-label', `${u.name} — ${$$$(u.cost)}. ${u.effect}.`);
-    tile.addEventListener('click', () => buyUpgrade(u));
+    tile.addEventListener('click', () => {
+      if (COARSE && pendingUpgradeTap !== u.id) {
+        pendingUpgradeTap = u.id;
+        const r = tile.getBoundingClientRect();
+        showTip(upgradeTip(u), r.left, r.bottom + 6);
+        clearTimeout(pendingTapTimer);
+        pendingTapTimer = setTimeout(() => { pendingUpgradeTap = null; hideTip(); }, 2600);
+        return;
+      }
+      pendingUpgradeTap = null;
+      hideTip();
+      buyUpgrade(u);
+    });
     bindTip(tile, () => upgradeTip(u));
     ui.upgradeGrid.appendChild(tile);
     upgradeEls.set(u.id, tile);
@@ -821,6 +836,7 @@ function buyBuilding(b) {
   Sfx.buy(run.era);
   if (firstOfType && FIRST_LINES[b.id]) pushLog('chat', FIRST_LINES[b.id]);
   sweepAchievements();
+  save();
 }
 
 function buyUpgrade(u) {
@@ -832,6 +848,7 @@ function buyUpgrade(u) {
   hideTip();
   Sfx.upgrade(run.era);
   sweepAchievements();
+  save();
 }
 
 /* ============ Clicking the spark ============ */
@@ -937,6 +954,7 @@ function claimGold(e) {
   pushLog('sys', 'Breakthrough — ' + announce);
   despawnGold(true);
   sweepAchievements();
+  save();
 }
 
 function addBuff(buff) {
@@ -1051,6 +1069,7 @@ function applyEra(idx, announce) {
       actions: [{ label: 'Continue', primary: true }],
     });
     rotateTicker();
+    save();
   }
 }
 
@@ -1228,12 +1247,12 @@ function doPrestige(sp) {
 
 /* ============ Save / load ============ */
 
-function save() {
+function save(manual) {
   meta.log = meta.log.slice(-80);
   const data = { v: 1, savedAt: now(), run, meta };
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-    flashSaved();
+    if (manual) flashSaved();
   } catch (_) {}
 }
 
@@ -1443,7 +1462,8 @@ ui.soundBtn.addEventListener('click', () => {
   applySoundSetting();
   save();
 });
-ui.saveBtn.addEventListener('click', save);
+ui.saveBtn.addEventListener('click', () => save(true));
+ui.saveBtn.title = 'The game already auto-saves every 10 seconds and whenever you leave.';
 ui.exportBtn.addEventListener('click', exportSave);
 ui.importBtn.addEventListener('click', importSave);
 ui.wipeBtn.addEventListener('click', wipeSave);
@@ -1460,7 +1480,10 @@ ui.buyMode.addEventListener('click', (e) => {
   updateAffordability(true);
 });
 
-window.addEventListener('beforeunload', save);
+/* save aggressively — beforeunload alone is unreliable, especially on phones */
+window.addEventListener('beforeunload', () => save());
+window.addEventListener('pagehide', () => save());
+document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
 
 /* ============ Init ============ */
 
@@ -1500,7 +1523,7 @@ function init() {
 
   setInterval(tick, 100);
   setInterval(rotateTicker, 9000);
-  setInterval(save, 30000);
+  setInterval(() => save(), 10000);
 }
 
 init();

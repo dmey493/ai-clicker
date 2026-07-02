@@ -55,6 +55,9 @@ button {
   cursor: pointer;
 }
 
+/* kill the 300ms double-tap-zoom delay on interactive elements (pinch zoom stays) */
+button, input { touch-action: manipulation; }
+
 :focus-visible {
   outline: 2px solid var(--accent-btn);
   outline-offset: 2px;
@@ -690,11 +693,70 @@ body[data-era="6"] .spark-svg { animation: breathe 3s ease-in-out infinite, spin
 }
 
 @media (max-width: 760px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout { grid-template-columns: 1fr; padding: 12px; gap: 14px; }
   .col-clicker, .col-store, .col-feed { grid-column: 1; }
-  .col-store { grid-row: auto; }
-  .topbar { height: auto; padding: 8px 12px; flex-wrap: wrap; }
+  /* on a phone the store comes before the feed — buying is the game */
+  .col-clicker { order: 0; }
+  .col-store { order: 1; grid-row: auto; }
+  .col-feed { order: 2; }
+  .topbar { height: auto; padding: 8px 10px; flex-wrap: wrap; }
+  .topbar-actions { flex-wrap: wrap; justify-content: flex-end; gap: 0; }
+  .btn-quiet { padding: 6px 8px; font-size: 12px; }
+  .brand-name { font-size: 15px; }
+  .model-pill { max-width: 42vw; }
+  .greeting { font-size: 19px; min-height: 0; margin-bottom: 10px; }
+  .money { font-size: 32px; }
+  .money.is-long { font-size: 24px; }
+  .spark-stage { height: 260px; }
+  .spark-btn { width: 190px; height: 190px; }
+  .spark-svg { width: 170px; height: 170px; }
   .log { max-height: 46vh; }
+  .toasts { left: 10px; right: 10px; bottom: 10px; max-width: none; }
+  .modal { padding: 20px 18px 16px; }
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* mobile browsers: dvh tracks the real visible height as the URL bar moves */
+@supports (height: 100dvh) {
+  .log { max-height: calc(100dvh - 320px); }
+  .store-panel { max-height: calc(100dvh - 96px); }
+  .ach-grid, .stats { max-height: calc(100dvh - 300px); }
+  @media (max-width: 760px) {
+    .log { max-height: 46dvh; }
+  }
+}
+
+/* on-screen D-pad for walking the Facility on touch screens */
+.dpad {
+  position: absolute;
+  right: 14px;
+  bottom: 96px;
+  display: none;
+  grid-template-columns: repeat(3, 54px);
+  grid-template-rows: repeat(2, 54px);
+  gap: 6px;
+  z-index: 2;
+}
+.dpad-b {
+  width: 54px;
+  height: 54px;
+  background: rgba(23, 19, 16, 0.72);
+  border: 1px solid #4A4238;
+  border-radius: 14px;
+  color: #C9BFAE;
+  font-size: 17px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dpad-b:active { background: rgba(74, 66, 56, 0.9); color: #EFE3CC; }
+.dpad-up { grid-column: 2; grid-row: 1; }
+.dpad-left { grid-column: 1; grid-row: 2; }
+.dpad-down { grid-column: 2; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+@media (pointer: coarse) {
+  .dpad { display: grid; }
+  .factory-hint { display: none; }
 }
 
 /* ============ Era progress ============ */

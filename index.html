@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AI Clicker — CLAWD</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-104 -104 208 208'%3E%3Cg fill='%23D97757'%3E%3Ccircle r='12'/%3E%3Cpath d='M0 0C6-29 6-67 0-96C-6-67-6-29 0 0Z'/%3E%3Cpath transform='rotate(36)' d='M0 0C5-20 5-47 0-68C-5-47-5-20 0 0Z'/%3E%3Cpath transform='rotate(72)' d='M0 0C6-29 6-67 0-96C-6-67-6-29 0 0Z'/%3E%3Cpath transform='rotate(108)' d='M0 0C5-20 5-47 0-68C-5-47-5-20 0 0Z'/%3E%3Cpath transform='rotate(144)' d='M0 0C6-29 6-67 0-96C-6-67-6-29 0 0Z'/%3E%3Cpath transform='rotate(180)' d='M0 0C5-20 5-47 0-68C-5-47-5-20 0 0Z'/%3E%3Cpath transform='rotate(216)' d='M0 0C6-29 6-67 0-96C-6-67-6-29 0 0Z'/%3E%3Cpath transform='rotate(252)' d='M0 0C5-20 5-47 0-68C-5-47-5-20 0 0Z'/%3E%3Cpath transform='rotate(288)' d='M0 0C6-29 6-67 0-96C-6-67-6-29 0 0Z'/%3E%3Cpath transform='rotate(324)' d='M0 0C5-20 5-47 0-68C-5-47-5-20 0 0Z'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
@@ -228,6 +228,12 @@
     <button class="btn-ghost" id="factoryClose">Leave the floor</button>
   </div>
   <canvas id="factoryCanvas"></canvas>
+  <div class="dpad" id="factoryDpad" aria-hidden="true">
+    <button class="dpad-b dpad-up" data-dir="up" tabindex="-1">▲</button>
+    <button class="dpad-b dpad-left" data-dir="left" tabindex="-1">◀</button>
+    <button class="dpad-b dpad-down" data-dir="down" tabindex="-1">▼</button>
+    <button class="dpad-b dpad-right" data-dir="right" tabindex="-1">▶</button>
+  </div>
   <div class="factory-info">
     <span class="fi-name" id="fiName">THE FACILITY FLOOR</span>
     <span class="fi-flavor" id="fiFlavor"></span>
