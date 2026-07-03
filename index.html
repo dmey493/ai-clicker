@@ -74,6 +74,14 @@
     <path d="M27 12.5a11.5 11.5 0 0 1 0 7" fill="none" stroke="#55504A" stroke-width="1.8" stroke-linecap="round"/>
     <path d="M5 12.5a11.5 11.5 0 0 0 0 7" fill="none" stroke="#55504A" stroke-width="1.8" stroke-linecap="round"/>
   </symbol>
+  <symbol id="i-farm" viewBox="0 0 32 32">
+    <rect x="4" y="10" width="7" height="14" rx="2" fill="#F0EBE0" stroke="#55504A" stroke-width="1.6"/>
+    <rect x="12.5" y="10" width="7" height="14" rx="2" fill="#F0EBE0" stroke="#55504A" stroke-width="1.6"/>
+    <rect x="21" y="10" width="7" height="14" rx="2" fill="#F0EBE0" stroke="#55504A" stroke-width="1.6"/>
+    <circle cx="7.5" cy="16" r="1.6" fill="#55504A"/><circle cx="16" cy="16" r="1.6" fill="#55504A"/><circle cx="24.5" cy="16" r="1.6" fill="#55504A"/>
+    <path d="M7.5 6.5v-2M6.5 5.5h2M16 6.5v-2M15 5.5h2M24.5 6.5v-2M23.5 5.5h2" stroke="#D97757" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M6 20.5h3M14.5 20.5h3M23 20.5h3" stroke="#D97757" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
   <symbol id="i-sim" viewBox="0 0 32 32">
     <rect x="5" y="5" width="22" height="22" rx="2" fill="none" stroke="#55504A" stroke-width="1.8"/>
     <rect x="10.5" y="10.5" width="11" height="11" rx="1.5" fill="none" stroke="#D97757" stroke-width="1.7"/>
@@ -123,6 +131,12 @@
       <p class="era-sub" id="eraSub"></p>
     </div>
 
+    <div class="directive hidden" id="directiveBar">
+      <span class="d-label">DIRECTIVE</span>
+      <span class="d-text" id="directiveText"></span>
+      <span class="d-progress" id="directiveProgress"></span>
+    </div>
+
     <div class="panel spark-stage">
       <div class="spark-quip serif" id="sparkQuip" aria-hidden="true"></div>
       <button class="spark-btn" id="sparkBtn" aria-label="Run CLAWD — earn money">
@@ -160,6 +174,10 @@
     <div class="ticker" id="ticker">
       <span class="ticker-tag serif">WIRE</span>
       <span class="ticker-text" id="tickerText">Signal acquired…</span>
+    </div>
+
+    <div class="mrows-wrap panel" id="mrowsWrap" hidden>
+      <div class="mrows" id="mrows"></div>
     </div>
 
     <div class="tabs" role="tablist" aria-label="Feed sections">
@@ -252,5 +270,6 @@
 <script src="audio.js"></script>
 <script src="game.js"></script>
 <script src="factory.js"></script>
+<script src="rows.js"></script>
 </body>
 </html>

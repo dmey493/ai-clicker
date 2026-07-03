@@ -252,11 +252,20 @@ body[data-era="4"] .halo-core, body[data-era="5"] .halo-core, body[data-era="6"]
 /* era 5+: the outer glyph ring */
 body[data-era="5"] .halo-glyphs, body[data-era="6"] .halo-glyphs { display: block; }
 
+/* eras 7-8: everything is visible and spinning uncomfortably fast */
+body[data-era="7"] .halo, body[data-era="8"] .halo { display: block; }
+
 .halo-orbit1 { animation: spin 14s linear infinite; }
 .halo-orbit2 { animation: spin-rev 23s linear infinite; }
 .halo-glyphs { animation: spin 70s linear infinite; }
 body[data-era="6"] .halo-orbit1 { animation-duration: 7s; }
 body[data-era="6"] .halo-orbit2 { animation-duration: 11s; }
+body[data-era="7"] .halo-orbit1 { animation-duration: 5s; }
+body[data-era="7"] .halo-orbit2 { animation-duration: 8s; }
+body[data-era="8"] .halo-orbit1 { animation-duration: 2.6s; }
+body[data-era="8"] .halo-orbit2 { animation-duration: 4s; }
+body[data-era="8"] .halo-glyphs { animation-duration: 18s; }
+body[data-era="8"] .h-core { fill: #D6493C; }
 
 @keyframes spin-rev { to { rotate: -360deg; } }
 
@@ -269,8 +278,12 @@ body[data-era="3"] { --spark-glow: 30px; --spark-glow-a: 0.38; }
 body[data-era="4"] { --spark-glow: 34px; --spark-glow-a: 0.42; }
 body[data-era="5"] { --spark-glow: 40px; --spark-glow-a: 0.5; }
 body[data-era="6"] { --spark-glow: 48px; --spark-glow-a: 0.6; }
+body[data-era="7"] { --spark-glow: 54px; --spark-glow-a: 0.68; }
+body[data-era="8"] { --spark-glow: 62px; --spark-glow-a: 0.8; }
 body[data-era="5"] .spark-svg { animation: breathe 4.5s ease-in-out infinite, spin 90s linear infinite; }
 body[data-era="6"] .spark-svg { animation: breathe 3s ease-in-out infinite, spin 45s linear infinite; }
+body[data-era="7"] .spark-svg { fill: #CE5A38; animation: breathe 2.2s ease-in-out infinite, spin 22s linear infinite; }
+body[data-era="8"] .spark-svg { fill: #C64B2E; animation: breathe 1.4s ease-in-out infinite, spin 9s linear infinite; }
 
 @keyframes spin { to { rotate: 360deg; } }
 
@@ -860,6 +873,93 @@ body.has-storm .spark-btn { animation: vibrate 90ms linear infinite; }
   75% { transform: translate(1px, 1px); }
 }
 
+/* ============ Directives: CLAWD tells you to click ============ */
+
+.directive {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 9px 12px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-soft-border);
+  border-left: 3px solid #A03225;
+  border-radius: var(--radius-m);
+}
+.d-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #A03225;
+  flex: none;
+}
+.d-text { font-size: 13px; min-width: 0; }
+.d-progress {
+  margin-left: auto;
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ Live machine rows (the grandma strip) ============ */
+
+.mrows-wrap { margin-top: 12px; padding: 6px; }
+.mrows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 296px;
+  overflow-y: auto;
+}
+.mrow {
+  position: relative;
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+}
+.mrow:hover { border-color: var(--border-strong); }
+.mrow canvas {
+  display: block;
+  width: 100%;
+  height: 44px;
+  image-rendering: pixelated;
+}
+.mrow-count {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFF8EE;
+  background: rgba(31, 30, 29, 0.5);
+  padding: 1px 8px;
+  border-radius: 999px;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ Corruption pulses (era 7+) ============ */
+
+body.is-corrupted .ticker { background: #421511; }
+body.is-corrupted .ticker-text, body.is-corrupted .ticker-tag { color: #F0B4A8; }
+body.is-corrupted .greeting { color: #A03225; }
+body.is-corrupted .spark-svg {
+  filter: drop-shadow(0 0 var(--spark-glow) rgba(200, 60, 40, 0.75)) hue-rotate(-14deg);
+}
+body.is-corrupted .model-pill {
+  color: #A03225;
+  border-color: #E0B4A8;
+  animation: pill-jitter 0.3s steps(2) infinite;
+}
+@keyframes pill-jitter { 50% { transform: translateX(1px); } }
+
 /* ============ Automation icons & the Facility ============ */
 
 .b-chip svg { width: 24px; height: 24px; }
@@ -938,7 +1038,9 @@ body.factory-open { overflow: hidden; }
 /* ============ Reduced motion ============ */
 
 @media (prefers-reduced-motion: reduce) {
-  .spark-svg, body[data-era="5"] .spark-svg, body[data-era="6"] .spark-svg { animation: none; }
+  .spark-svg, body[data-era="5"] .spark-svg, body[data-era="6"] .spark-svg,
+  body[data-era="7"] .spark-svg, body[data-era="8"] .spark-svg { animation: none; }
+  body.is-corrupted .model-pill { animation: none; }
   .gold-spark { animation: none; }
   .gold-spark.is-expiring { animation: gold-fade 3s linear forwards; }
   .floater { animation: float-up 200ms ease-out forwards; }

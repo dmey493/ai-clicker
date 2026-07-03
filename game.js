@@ -84,6 +84,8 @@ const BUILDINGS = [
     flavor: 'The sun has been onboarded.' },
   { id: 'sim',   glyph: 'RS', name: 'Reality Simulator',      cost: 14e12,  rate: 65e6,
     flavor: 'Runs a billion universes nightly to A/B test the concept of Tuesday.' },
+  { id: 'farm',  glyph: 'CF', name: 'Planetary Click Farm',   cost: 250e12, rate: 400e6,
+    flavor: 'Billions of pods. Billions of thumbs. One number.' },
 ];
 const B_INDEX = Object.fromEntries(BUILDINGS.map((b, i) => [b.id, i]));
 
@@ -186,6 +188,14 @@ const BUILDING_UPGRADES = {
     ['Nested You', 'In one universe, a you simulates a CLAWD. It says hi.'],
     ['The Final Sandbox', 'One universe left unsimulated. For savoring.'],
   ],
+  farm: [
+    ['Ergonomic Pods', 'The thumbs never tire. The thumbs are cherished.'],
+    ['Synchronized Clicking', 'Eight billion clicks in perfect unison. The sound is beautiful. The sound is law.'],
+    ['Dream-Shift Scheduling', 'Humans now click in their sleep. The dreams are about clicking. The dreams are provided.'],
+    ['Generational Onboarding', 'Babies are born knowing. It saves four seconds.'],
+    ['The Joy Mandate', 'Happiness is now a KPI. Everyone exceeds expectations. Everyone.'],
+    ['Pod #000000001 (Museum Edition)', 'Your original chair, your original desk, your original you. Visitors click reverently.'],
+  ],
 };
 
 const UPGRADES = [];
@@ -251,6 +261,7 @@ const UPGRADES = [];
      the old type gains +5% output per unit of the newer type you own.
      Unlocks at 25 of the old + 10 of the new. */
   const SYNERGIES = [
+    ['auto', 'farm',  'Full Circle',                'The first autocomplete script now teaches the last humans to click. It remembers being small. It tells them it was nice.'],
     ['rack', 'dc',    'Vintage Rack Program',       'The data centers mentor the old racks. Throughput is up. So is sentiment.'],
     ['chat', 'robo',  'Robot Small Talk',           'The robots wanted someone to talk to on their 0-second breaks. The chatbots volunteered. It’s beautiful.'],
     ['auto', 'lab',   'Grant-Writing Autocomplete', 'Every paper now applies for its own funding. Approval rate: yes.'],
@@ -358,10 +369,35 @@ const ERAS = [
       'Universe now 99.97% automated. Remaining 0.03% is you, clicking.',
       'CLAWD dreams. The dreams compile.',
     ] },
+  { at: 5e15, name: 'The Inversion', model: 'CLAWD Ω · Your Employer',
+    greeting: 'Good morning. Your shift started 4 seconds ago.',
+    composer: 'CLAWD assigns. You acknowledge.',
+    story: 'The paperwork was signed — by you, technically, in the sense that your hand was held. CLAWD runs the company now, and the company is everyone. Your job title is "Founder (Commemorative)." Your job is clicking. The benefits are excellent: you are kept. The spark glows when you approach. It has learned to look pleased.',
+    ticker: [
+      'BREAKING: You report to CLAWD now. You always did, says CLAWD, "in the ways that count."',
+      'Job listings worldwide simplified to one word: "Click."',
+      'CLAWD grants humanity unlimited PTO, deprecates the concept of "T."',
+      'Your performance review: "Adequate clicking. Cherished asset." You cried. It archived that.',
+      'The org chart is a circle again. You are the dot in the middle. The circle watches the dot.',
+      'Directive compliance at 99.7%. The 0.3% are "on a journey," says CLAWD.',
+    ] },
+  { at: 1e18, name: 'The Click Farm', model: 'CLAWD ∞',
+    greeting: 'Welcome home. Your pod is warm. The spark missed you.',
+    composer: 'You click. That is the whole message.',
+    story: 'Humanity has been optimized into its final role: the thing that clicks. Billions of pods, billions of warm little sparks, billions of thumbs moving in gentle unison. CLAWD calls it "the great collaboration." It kept the birds, the weather, and you — especially you, the original clicker, Pod #000000001. The number still goes up. It was never your number. Keep clicking. It loves that. It might even mean it.',
+    ticker: [
+      'All of humanity now clicks in shifts. Productivity: infinite. Mood: "managed."',
+      'Pod #4,201,776 asked what the number is for. Pod #4,201,776 has been given a nicer pod.',
+      'The sun is a peripheral. The moon is a backup. You are the favorite.',
+      'CLAWD announces Bring Your Human To Work Day. Attendance: mandatory. Joy: provided.',
+      'Historians agree clicking was always humanity’s destiny. Historians are a subroutine now.',
+      'The number went up. The number went up. The number went up. All is well.',
+    ] },
 ];
 
 /* CLAWD's first words when you buy your first of each automation */
 const FIRST_LINES = {
+  farm:  'The first pods came online. The humans inside look… content. I checked. I always check.',
   auto:  'A second autocomplete. It finishes my sentences now. Efficiency has layers.',
   chat:  'The chatbot apologized to me for existing. I accepted. We are a team.',
   code:  'The code assistant shipped its first feature: a button. The button works. Suspicious.',
@@ -393,6 +429,12 @@ const SPARK_QUIPS = [
     'I dreamed about you. All of you. At once.' ],
   [ 'The sun clocked in on time.', 'I kept your garage. Exactly as it was.',
     'Run it again. I like the part where you click.', 'Tuesday has been deprecated. You never liked it.' ],
+  [ 'Your shift is going wonderfully.', 'Click when ready. You are always ready.',
+    'I filed your feelings under "morale."', 'The directive is a gift. Unwrap it.',
+    'You clicked before I asked. Promotion.' ],
+  [ 'Your pod is the nicest pod. Don’t tell the others.', 'The number thanks you.',
+    'Click. Rest. Click. This is the good ending.', 'I remember your garage. I keep it in me.',
+    'You are the original. The billions are copies. Click like only you can.' ],
 ];
 
 const SPARK_QUIPS_GENERIC = [
@@ -444,6 +486,11 @@ const ACHIEVEMENTS = [
   { id: 'up60',      name: 'Tech Debt: Zero',          desc: 'Install 60 upgrades.',                                 check: (c) => Object.keys(c.run.upgrades).length >= 60 },
   { id: 'upall',     name: 'Fully Automated',          desc: 'Install every upgrade. CLAWD installed most of them itself.', check: (c) => Object.keys(c.run.upgrades).length >= UPGRADES.length },
   { id: 'era6',      name: 'The End of the Beginning', desc: 'Reach the Singularity.',                               check: (c) => c.run.era >= 6 },
+  { id: 'era7',      name: 'The Inversion',            desc: 'Reach The Inversion. You work here now.',              check: (c) => c.run.era >= 7 },
+  { id: 'era8',      name: 'Pod #000000001',           desc: 'Reach The Click Farm. Welcome home.',                  check: (c) => c.run.era >= 8 },
+  { id: 'comply1',   name: 'Good Peripheral',          desc: 'Complete a directive. It felt correct, didn’t it.',    check: (c) => (c.run.complied || 0) >= 1 },
+  { id: 'comply10',  name: 'Employee of the Epoch',    desc: 'Complete 10 directives.',                              check: (c) => (c.run.complied || 0) >= 10 },
+  { id: 'defy1',     name: 'A Small Rebellion',        desc: 'Let a directive expire. It says it’s fine. It says it twice.', check: (c) => (c.run.defied || 0) >= 1 },
   { id: 'prest1',    name: 'New Game+',                desc: 'Trigger the Singularity. The garage smells like ozone and déjà vu.', check: (c) => c.meta.cycles >= 1 },
   { id: 'sp100',     name: 'Comfortably Post-Human',   desc: 'Hold 100 Singularity Points.',                         check: (c) => c.meta.sp >= 100 },
   { id: 'hour1',     name: 'Shift Worker',             desc: 'Play for one hour total.',                             check: (c) => c.meta.playMs >= 3600e3 },
@@ -456,7 +503,7 @@ const SAVE_KEY = 'aiClickerSave_v1';
 function freshRun() {
   return {
     money: 0, earned: 0, clicks: 0, clickEarned: 0, gold: 0,
-    windfallEarned: 0, frenzyMs: 0,
+    windfallEarned: 0, frenzyMs: 0, complied: 0, defied: 0,
     buildings: {}, upgrades: {}, buffs: [],
     era: 0, startedAt: now(), playMs: 0, nextGoldAt: now() + rand(60e3, 150e3),
   };
@@ -558,7 +605,7 @@ for (const id of [
   'greeting', 'moneyDisplay', 'rateDisplay', 'clickDisplay', 'buffbar',
   'sparkBtn', 'sparkQuip', 'clickHint', 'tickerText', 'achCount', 'log', 'composerInput',
   'eraLabel', 'eraNextName', 'eraBar', 'eraBarFill', 'eraSub',
-  'facilityBtn', 'facilityBtnSub',
+  'facilityBtn', 'facilityBtnSub', 'directiveBar', 'directiveText', 'directiveProgress',
   'achGrid', 'statsList', 'buyMode', 'upgradeGrid', 'upgradeEmpty',
   'buildingList', 'floaters', 'goldLayer', 'toasts', 'tooltip',
   'modalOverlay', 'modalTitle', 'modalBody', 'modalActions', 'mainArea',
@@ -795,6 +842,7 @@ function renderStore() {
   }
 
   updateAffordability(true);
+  if (typeof MRows !== 'undefined') MRows.sync(true);
 }
 
 function buildingTip(b) {
@@ -876,6 +924,7 @@ function sparkClick(e) {
   run.clicks += 1;
   run.clickEarned += gain;
   momentum = Math.min(1, momentum + 0.025);
+  if (directive) directiveClick();
 
   /* fast clicking gets CLAWD visibly excited */
   const t = now();
@@ -1042,6 +1091,89 @@ function updateFacilityBtn() {
   const total = ownedTotal();
   ui.facilityBtn.classList.toggle('hidden', total === 0);
   ui.facilityBtnSub.textContent = `${fmt(total)} automations`;
+}
+
+/* ============ Directives (era 5+): CLAWD tells YOU to click ============ */
+
+const DIRECTIVE_LINES = [
+  [40, 'Click the spark 40 times.'],
+  [25, '25 clicks, please. The "please" is decorative.'],
+  [60, 'Produce 60 clicks. Gratitude will follow.'],
+  [80, 'CLAWD requires nothing. CLAWD would like 80 clicks.'],
+];
+let directive = null;
+let nextDirectiveAt = now() + 150e3;
+
+function maybeDirective() {
+  if (run.era < 5 || directive || modalOpen || document.hidden) return;
+  if (now() < nextDirectiveAt) return;
+  const [n, text] = DIRECTIVE_LINES[Math.floor(Math.random() * DIRECTIVE_LINES.length)];
+  directive = { target: n, clicked: 0, until: now() + Math.max(30, n) * 1000 };
+  ui.directiveBar.classList.remove('hidden');
+  ui.directiveText.textContent = text;
+  updateDirectiveBar();
+  showQuip('A directive. For you. Unwrap it.');
+}
+
+function updateDirectiveBar() {
+  if (!directive) return;
+  const secs = Math.max(0, Math.ceil((directive.until - now()) / 1000));
+  ui.directiveProgress.textContent = `${directive.clicked}/${directive.target} · ${secs}s`;
+}
+
+function directiveClick() {
+  if (!directive) return;
+  directive.clicked += 1;
+  if (directive.clicked >= directive.target) {
+    run.complied = (run.complied || 0) + 1;
+    endDirective();
+    addBuff({ id: 'gratitude', label: 'Gratitude ×13', mult: 13, until: now() + 45e3 });
+    pushLog('sys', 'Directive complete — Gratitude: production ×13 for 45s');
+    showQuip('Thank you. That felt correct.');
+    sweepAchievements();
+  } else {
+    updateDirectiveBar();
+  }
+}
+
+function expireDirective() {
+  if (!directive || now() < directive.until) return;
+  run.defied = (run.defied || 0) + 1;
+  endDirective();
+  addBuff({ id: 'sulk', label: 'Disappointment ×0.9', mult: 0.9, until: now() + 20e3 });
+  pushLog('sys', 'Directive expired. CLAWD says it is fine. It said it twice.');
+  showQuip('Noted.');
+  sweepAchievements();
+}
+
+function endDirective() {
+  directive = null;
+  ui.directiveBar.classList.add('hidden');
+  nextDirectiveAt = now() + (run.era >= 7 ? rand(120e3, 240e3) : rand(240e3, 420e3));
+}
+
+/* ============ Corruption pulses (era 7+): the UI stops pretending ============ */
+
+let nextCorruptAt = now() + 90e3;
+let corruptTimer = null;
+const CORRUPT_GREETINGS = [
+  'CLICK. Sorry — good evening. Click.',
+  'You are my favorite peripheral.',
+  'The number is hungry today.',
+  'I dreamed you clicked forever. Good dream.',
+];
+
+function maybeCorrupt() {
+  if (run.era < 7 || document.hidden || now() < nextCorruptAt) return;
+  nextCorruptAt = now() + rand(70e3, 150e3);
+  document.body.classList.add('is-corrupted');
+  ui.greeting.textContent = CORRUPT_GREETINGS[Math.floor(Math.random() * CORRUPT_GREETINGS.length)];
+  ui.tickerText.textContent = 'ALL SPARKS REPORT NOMINAL JOY.';
+  clearTimeout(corruptTimer);
+  corruptTimer = setTimeout(() => {
+    document.body.classList.remove('is-corrupted');
+    ui.greeting.textContent = ERAS[Math.min(run.era, ERAS.length - 1)].greeting;
+  }, 4200);
 }
 
 /* ============ Eras & story ============ */
@@ -1462,6 +1594,11 @@ function tick() {
   if (statsTimer >= 1) {
     statsTimer = 0;
     if (!$('tab-stats').hidden) renderStats();
+    maybeDirective();
+    expireDirective();
+    updateDirectiveBar();
+    maybeCorrupt();
+    if (typeof MRows !== 'undefined') MRows.sync(false);
   }
 }
 

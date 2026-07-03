@@ -9,7 +9,9 @@ const BUILDINGS = [
   ['auto', 15, 0.1], ['chat', 100, 1], ['code', 1100, 8], ['rack', 12e3, 47],
   ['dc', 130e3, 260], ['robo', 1.4e6, 1400], ['lab', 20e6, 7800], ['corp', 330e6, 44e3],
   ['grid', 5.1e9, 260e3], ['swarm', 75e9, 1.6e6], ['dyson', 1e12, 10e6], ['sim', 14e12, 65e6],
+  ['farm', 250e12, 400e6],
 ];
+const N = BUILDINGS.length;
 const GROWTH = 1.15;
 const TIER_COST = [10, 60, 600, 8e3, 100e3, 1.2e6];
 const TIER_REQ = [1, 10, 25, 50, 100, 150];
@@ -23,7 +25,7 @@ const GLOBALS = [
 ];
 const SERENDIPITY_COST = 50e6, EUREKA_COST = 5e9;
 /* synergies: [oldIdx, newIdx]; cost = new building base × 25; +5%/partner; req 25 old + 10 new */
-const SYNERGIES = [[3, 4], [1, 5], [0, 6], [2, 7], [4, 8], [5, 9], [6, 11], [7, 10]];
+const SYNERGIES = [[3, 4], [1, 5], [0, 6], [2, 7], [4, 8], [5, 9], [6, 11], [7, 10], [0, 12]];
 const SYN_PCT = 0.05;
 const GOLD_MIN = 120, GOLD_MAX = 240, GOLD_FREQ_MULT = 0.65;
 const FRENZY_MULT = 7, FRENZY_SECS = 45, STORM_MULT = 77, STORM_SECS = 13, DUR_MULT = 1.5;
@@ -33,6 +35,7 @@ const MOMENTUM_MULT = 2.5; /* sustained clicker holds full momentum */
 const ERAS = [
   ['Garage', 0], ['Startup', 50e3], ['Corporation', 5e6], ['Automation Age', 250e6],
   ['Post-Labor', 15e9], ['Awakening', 1e12], ['Singularity', 75e12],
+  ['Inversion', 5e15], ['Click Farm', 1e18],
 ];
 
 /* ---- player model ---- */
@@ -41,7 +44,7 @@ const CPS = 4; // clicks per second while active
 /* ---- state ---- */
 const S = {
   bank: 0, earned: 0, t: 0,
-  counts: new Array(12).fill(0), tiers: new Array(12).fill(0),
+  counts: new Array(BUILDINGS.length).fill(0), tiers: new Array(BUILDINGS.length).fill(0),
   synBought: new Array(SYNERGIES.length).fill(false),
   clickFlat: 1, clickPct: BASE_CLICK_PCT, clickUpsBought: 0,
   globalsBought: 0, globalMult: 1, hasSE: false, hasER: false,
@@ -61,7 +64,7 @@ function bMult(i) {
 }
 function rate() {
   let r = 0;
-  for (let i = 0; i < 12; i++) r += S.counts[i] * BUILDINGS[i][2] * bMult(i);
+  for (let i = 0; i < N; i++) r += S.counts[i] * BUILDINGS[i][2] * bMult(i);
   return r * S.globalMult;
 }
 function effRate() { return rate() * (S.t < S.frenzyUntil ? FRENZY_MULT : 1); }
@@ -76,7 +79,7 @@ function buildingCost(i) { return BUILDINGS[i][1] * Math.pow(GROWTH, S.counts[i]
 function candidates() {
   const out = [];
   const base = rate();
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < N; i++) {
     const dr = BUILDINGS[i][2] * bMult(i) * S.globalMult;
     out.push([buildingCost(i), dr, () => S.counts[i]++]);
     const t = S.tiers[i];

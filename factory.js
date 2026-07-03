@@ -467,6 +467,42 @@ const Factory = (() => {
       '................',
     ]],
 
+    farm: [[
+      '..g....g....g...',
+      '................',
+      '.kkkk.kkkk.kkkk.',
+      '.kbbk.kbbk.kbbk.',
+      '.kpbk.kbpk.kpbk.',
+      '.kbbk.kbbk.kbbk.',
+      '.kmmk.kmmk.kmmk.',
+      '.kkkk.kkkk.kkkk.',
+      '.kddk.kddk.kddk.',
+      '..kk...kk...kk..',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+    ], [
+      '..a....a....a...',
+      '..g....g....g...',
+      '.kkkk.kkkk.kkkk.',
+      '.kbbk.kbbk.kbbk.',
+      '.kbpk.kpbk.kbpk.',
+      '.kbbk.kbbk.kbbk.',
+      '.kmmk.kmmk.kmmk.',
+      '.kkkk.kkkk.kkkk.',
+      '.kddk.kddk.kddk.',
+      '..kk...kk...kk..',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+    ]],
+
     /* founder avatar — down / up / right (left is mirrored) */
     walkDown: [[
       '................',
@@ -1087,6 +1123,9 @@ const Factory = (() => {
     open, close, isOpen: () => open_,
     press: (dir) => keys.add(dir),
     release: (dir) => keys.delete(dir),
+    sheets: () => { compile(); return sheets; },
+    moods: MOODS,
+    moodFor,
   };
 })();
 
