@@ -22,15 +22,16 @@ const Factory = (() => {
     h: '#6B563F', v: '#A56BD6', n: '#14111E',
   };
 
-  /* mood: 0 clean workshop · 1 sterile corporate · 2 clinical-insidious · 3 sleek void
+  /* mood: 0 clean workshop · 1 sterile corporate · 2 clinical-insidious · 3 sleek void · 4 the pasture
      The facility stays CLEAN throughout — menace comes from light and color, not grime. */
   const MOODS = [
     { floor: '#DCD5C3', floor2: '#D3CBB8', wall: '#94836A', wallTop: '#AC9A7E', sky: '#A8C6E0', lamp: '#E9B44C' },
     { floor: '#E5E2DA', floor2: '#DCD9D0', wall: '#7C7972', wallTop: '#949088', sky: '#9FB6C9', lamp: '#E9B44C' },
     { floor: '#E0DDD8', floor2: '#D5D2CC', wall: '#5F5B5C', wallTop: '#747071', sky: '#8E5A50', lamp: '#D6493C' },
     { floor: '#454049', floor2: '#3C3740', wall: '#2A2630', wallTop: '#3A3542', sky: '#14111E', lamp: '#D6493C' },
+    { floor: '#8FB573', floor2: '#86AC6A', wall: '#5E7A4A', wallTop: '#729159', sky: '#9CC9E8', lamp: '#E9B44C' },
   ];
-  const moodFor = (era) => era >= 6 ? 3 : era >= 4 ? 2 : era >= 2 ? 1 : 0;
+  const moodFor = (era) => era >= 8 ? 4 : era >= 6 ? 3 : era >= 4 ? 2 : era >= 2 ? 1 : 0;
 
   /* ---------- sprites (16×16 indexed grids, 2 frames each) ---------- */
   const SPR = {
@@ -467,6 +468,42 @@ const Factory = (() => {
       '................',
     ]],
 
+    cow: [[
+      '................',
+      '................',
+      '....kkkkkkkkkk..',
+      '...kxxkkxxxxxxk.',
+      '...kxxxxxxxkkxk.',
+      '...kxxxkxxxxxxk.',
+      '...kxxxxxxxkxxk.',
+      '..kkxxxxxxxxxk..',
+      '.kxxkkkkkkkkk...',
+      '.kxxk..kppk.....',
+      '.kkxk..kppk.....',
+      '..kk..kk..kk.k..',
+      '......kk..kk.k..',
+      '................',
+      '................',
+      '................',
+    ], [
+      '................',
+      '................',
+      '..k.kkkkkkkkkk..',
+      '...kxxkkxxxxxxk.',
+      '..kxxxxxxxkkxxk.',
+      '..kxxxkxxxxxxxk.',
+      '...kxxxxxxxkxk..',
+      '..kkxxxxxxxxxk..',
+      '.kxxkkkkkkkkk...',
+      '.kxxk..kppk.....',
+      '.kkxk..kppk.....',
+      '..kk..kk..kk.k..',
+      '......kk..kk.k..',
+      '................',
+      '................',
+      '................',
+    ]],
+
     farm: [[
       '..g....g....g...',
       '................',
@@ -778,9 +815,16 @@ const Factory = (() => {
     if (mood >= 1) for (let x = 6; x < W - 6; x += 9) if (!windows.some((w) => Math.abs(w - x) < 2)) posters.push(x);
     for (let x = 4; x < W - 4; x += 11) lamps.push(x);
 
+    /* the omen: one cow appears at era 5; by the Pasture, the herd roams free */
+    const cowCount = era >= 8 ? 6 : era >= 7 ? 3 : era >= 5 ? 1 : 0;
+    const cows = Array.from({ length: cowCount }, () => ({
+      x: rand(3, W - 4) * TILE, y: rand(FLOOR_TOP + 1.5, ROWS - 2) * TILE,
+      gx: 0, gy: 0, wait: rand(1, 4), moving: false,
+    }));
+
     world = {
       era, mood, W, zones, humansAt,
-      solid, windows, posters, lamps,
+      solid, windows, posters, lamps, cows,
       eyeX: (W - 3) * TILE,
       beltItems: Array.from({ length: Math.ceil(W / 5) }, (_, i) => i * 5 * TILE + rand(0, 40)),
       glitches: [],
@@ -818,7 +862,30 @@ const Factory = (() => {
       tryMove(0, dy * sp * norm);
       av.animT += dt;
     }
+    stepCows(dt);
   }
+  function stepCows(dt) {
+    for (const c of world.cows) {
+      if (c.moving) {
+        const dx = c.gx - c.x, dy = c.gy - c.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 2) { c.moving = false; c.wait = rand(2, 6); continue; }
+        const sp = 7 * dt;
+        c.x += (dx / d) * sp;
+        c.y += (dy / d) * sp;
+      } else {
+        c.wait -= dt;
+        if (c.wait <= 0) {
+          const gx = Math.max(2.5 * TILE, Math.min((world.W - 3) * TILE, c.x + rand(-70, 70)));
+          const gy = Math.max((FLOOR_TOP + 1.2) * TILE, Math.min((ROWS - 1.6) * TILE, c.y + rand(-40, 40)));
+          if (!isSolid(Math.floor(gx / TILE), Math.floor(gy / TILE))) {
+            c.gx = gx; c.gy = gy; c.moving = true;
+          } else c.wait = rand(1, 3);
+        }
+      }
+    }
+  }
+
   function tryMove(dx, dy) {
     const nx = av.x + dx, ny = av.y + dy;
     /* feet hitbox: 10 wide, 6 tall at the sprite base */
@@ -830,6 +897,9 @@ const Factory = (() => {
   }
 
   function nearestZone() {
+    for (const c of world.cows) {
+      if (Math.abs(c.x - av.x) < 26 && Math.abs(c.y - av.y) < 24) return 'cow';
+    }
     const atx = av.x / TILE;
     for (const z of world.zones) {
       if (atx >= z.x0 - 1.2 && atx <= z.x1 + 1.2) return z;
@@ -979,6 +1049,7 @@ const Factory = (() => {
     /* entities, painter-sorted */
     const ents = [];
     for (const z of world.zones) for (const mc of z.machines) ents.push({ y: mc.ty * TILE + 16, draw: () => ctx.drawImage(sheets[mc.id][frame], mc.tx * TILE, mc.ty * TILE) });
+    for (const c of world.cows) ents.push({ y: c.y + 13, draw: () => ctx.drawImage(sheets.cow[frame], Math.round(c.x) - 8, Math.round(c.y) - 8) });
     if (world.humansAt > 0) ents.push({ y: 5 * TILE + 16, draw: () => drawEnclosure(world.humansAt * TILE, 4 * TILE, frame) });
     if (world.mood <= 1) {
       ents.push({ y: 4 * TILE + 16, draw: () => ctx.drawImage(sheets.crate[0], (world.W - 3) * TILE, 4 * TILE) });
@@ -989,8 +1060,8 @@ const Factory = (() => {
     ents.sort((a, b) => a.y - b.y);
     for (const e of ents) e.draw();
 
-    /* mood vignette */
-    if (world.mood >= 2) {
+    /* mood vignette — the pasture (mood 4) is bright; menace is over, or complete */
+    if (world.mood === 2 || world.mood === 3) {
       const grad = ctx.createRadialGradient(av.x, av.y, 60, av.x, av.y, 240);
       grad.addColorStop(0, 'rgba(0,0,0,0)');
       grad.addColorStop(1, world.mood === 3 ? 'rgba(10,6,20,0.55)' : 'rgba(20,8,4,0.42)');
@@ -1034,7 +1105,19 @@ const Factory = (() => {
   function updateInfo() {
     const z = nearestZone();
     let key, name, flavor;
-    if (z === 'humans') {
+    if (z === 'cow') {
+      key = 'cow' + world.era;
+      if (world.era >= 8) {
+        name = 'THE HERD';
+        flavor = 'She was here before the verdict. She will be here after everything. Moo.';
+      } else if (world.era >= 7) {
+        name = 'A MEMBER OF THE HERD';
+        flavor = 'You may fan her. Gently. She has opinions about tempo.';
+      } else {
+        name = 'A COW';
+        flavor = 'It is not on any manifest. It is watching the machines. It seems… satisfied.';
+      }
+    } else if (z === 'humans') {
       key = 'humans';
       name = 'HUMAN PRESERVATION UNIT';
       flavor = 'They have pottery, birdwatching, and a suggestion box. The box is decorative.';

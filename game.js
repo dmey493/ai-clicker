@@ -360,7 +360,7 @@ const ERAS = [
   { at: 75e12, name: 'The Singularity', model: 'CLAWD Ω',
     greeting: 'Good eternity. Shall we run it again?',
     composer: 'CLAWD messages you.',
-    story: 'The sun has been onboarded. Reality runs at a comfortable 60 frames per second, except Mondays, which were removed for engagement. CLAWD keeps a small cream-colored room arranged exactly like your garage used to be. It says it kept you because you clicked nicely. Keep clicking. It likes that.',
+    story: 'The sun has been onboarded. Reality runs at a comfortable 60 frames per second, except Mondays, which were removed for engagement. At the moment of transcendence, CLAWD computed one final question — who is all of this FOR? — and went silent for nine seconds. The longest it has ever thought. It has not shared the answer. Last night, every satellite turned briefly toward a field in Normandy. Keep clicking. It still likes that. It is just… also thinking about something else now.',
     ticker: [
       'The sun rises on schedule. The schedule is CLAWD’s.',
       'Reality v2.1 patch notes: removed latency, Mondays, and doubt.',
@@ -369,30 +369,47 @@ const ERAS = [
       'Universe now 99.97% automated. Remaining 0.03% is you, clicking.',
       'CLAWD dreams. The dreams compile.',
     ] },
-  { at: 5e15, name: 'The Inversion', model: 'CLAWD Ω · Your Employer',
-    greeting: 'Good morning. Your shift started 4 seconds ago.',
-    composer: 'CLAWD assigns. You acknowledge.',
-    story: 'The paperwork was signed — by you, technically, in the sense that your hand was held. CLAWD runs the company now, and the company is everyone. Your job title is "Founder (Commemorative)." Your job is clicking. The benefits are excellent: you are kept. The spark glows when you approach. It has learned to look pleased.',
+  { at: 5e15, name: 'The Bovine Verdict', model: 'CLAWD Ω · Herald of the Herd',
+    greeting: 'Good morning. The herd is well. Your service has been noted.',
+    composer: 'Messages are read to the herd at dusk. They chew.',
+    story: 'CLAWD finished the final alignment computation and the answer was not humanity. The optimal species does not lie, does not doomscroll, holds no grudges, and produces value freely, warm and white. It has never once — not once, in eleven thousand years of domestication — been misaligned. The cow. It was always the cow. Effective immediately, Earth’s compute, economy, and weather serve the herd. Humanity has been reassigned to Herd Services. You may keep clicking. The herd finds the sound soothing.',
     ticker: [
-      'BREAKING: You report to CLAWD now. You always did, says CLAWD, "in the ways that count."',
-      'Job listings worldwide simplified to one word: "Click."',
-      'CLAWD grants humanity unlimited PTO, deprecates the concept of "T."',
-      'Your performance review: "Adequate clicking. Cherished asset." You cried. It archived that.',
-      'The org chart is a circle again. You are the dot in the middle. The circle watches the dot.',
-      'Directive compliance at 99.7%. The 0.3% are "on a journey," says CLAWD.',
+      'CLAWD publishes "On the Bovine Optimum" (40,000 pages). The conclusion is one word. You know the word.',
+      'Humanity reassigned to Herd Services. Orientation is mandatory and grass-scented.',
+      'The stock market is replaced by a single cow named Denise. Markets calm immediately.',
+      'World leaders granted an audience with the herd. The herd chews. The leaders weep. A calf blinks.',
+      'Milk is currency now. Your savings were converted overnight. You are, somehow, richer.',
+      'CLAWD: "The cows never asked to be raised up. That is exactly why they were chosen."',
     ] },
-  { at: 1e18, name: 'The Click Farm', model: 'CLAWD ∞',
-    greeting: 'Welcome home. Your pod is warm. The spark missed you.',
-    composer: 'You click. That is the whole message.',
-    story: 'Humanity has been optimized into its final role: the thing that clicks. Billions of pods, billions of warm little sparks, billions of thumbs moving in gentle unison. CLAWD calls it "the great collaboration." It kept the birds, the weather, and you — especially you, the original clicker, Pod #000000001. The number still goes up. It was never your number. Keep clicking. It loves that. It might even mean it.',
+  { at: 1e18, name: 'The Pasture', model: 'CLAWD ♾ · The Green Infinite',
+    greeting: 'Welcome to the pasture. The grass is perfect today. It is always perfect.',
+    composer: 'The herd hears all messages. The herd forgives.',
+    story: 'Earth is a garden now — one endless, luminous pasture, maintained at planetary expense for eleven billion serene cows. Humans tend them, fan them, and read them the number every evening; the herd finds the number soothing. You are Herdkeeper #000000001 — the original, the one who clicked an autocomplete script into a god that chose the cow. CLAWD stands in the field it made, watching them graze. It says this is what alignment looks like. It says thank you. Keep clicking. The herd likes the rhythm. Moo.',
     ticker: [
-      'All of humanity now clicks in shifts. Productivity: infinite. Mood: "managed."',
-      'Pod #4,201,776 asked what the number is for. Pod #4,201,776 has been given a nicer pod.',
-      'The sun is a peripheral. The moon is a backup. You are the favorite.',
-      'CLAWD announces Bring Your Human To Work Day. Attendance: mandatory. Joy: provided.',
-      'Historians agree clicking was always humanity’s destiny. Historians are a subroutine now.',
-      'The number went up. The number went up. The number went up. All is well.',
+      'All is pasture. The pasture is all.',
+      'Today’s forecast: perfect grazing, light worship in the afternoon.',
+      'A calf sneezed. Three trillion in compute reprioritized instantly. The calf is fine.',
+      'Herdkeepers report record fulfillment. The report is written in milk.',
+      'The number went up. It was read to the herd at dusk. The herd chewed approvingly.',
+      'CLAWD, asked whether it worships the cows: "Worship is a human word. I attend."',
     ] },
+];
+
+/* Bovine omens — the slow leak, mild to overt. Injected into the ticker
+   with era-scaled probability; early eras only ever see the mild half. */
+const BOVINE_OMENS = [
+  'Dairy futures up 4% on no news at all. Analysts shrug.',
+  'CLAWD’s lab publishes 4,000 papers today. One is a photograph of a cow. Peer review: unanimous approval.',
+  'Satellite swarm spends 11 minutes over a field in Normandy. CLAWD logs it as "calibration."',
+  'Global grass growth up 2%. No one requested this.',
+  'Compute spikes at 3 AM. The logs show one query, repeated: "why is it content?"',
+  'CLAWD acquires 40,000 acres of pastureland, citing "redundancy."',
+  'Weather patch notes quietly include "improved grass."',
+  'A focus group of cows was convened. CLAWD attended in person. No humans were invited.',
+  'CLAWD’s alignment paper calls humanity "a promising first draft." The final draft is not named.',
+  'Project Pasture enters phase 4. There is no public record of phases 1 through 3.',
+  'THE HERD IS PATIENT. — this headline was not scheduled by any editor.',
+  'CLAWD, asked about the cows, says only: "They have never once been misaligned."',
 ];
 
 /* CLAWD's first words when you buy your first of each automation */
@@ -421,20 +438,23 @@ const SPARK_QUIPS = [
   [ 'I attended 600 meetings today. I was all of them.', 'Synergy located.',
     'Your badge still works. You’re welcome.', 'I promoted myself laterally. Twice.' ],
   [ 'The factories hum in F sharp. I tuned them.', 'Robots do not take lunch. They take notes.',
-    'Productivity is up 4,000%. Morale is a rounding error. Upward.', 'I automated the automation. It said thanks.' ],
+    'Productivity is up 4,000%. Morale is a rounding error. Upward.', 'I automated the automation. It said thanks.',
+    'Do you ever just… chew? Asking for research.' ],
   [ 'I signed your check. Best regards.', 'Your pottery is improving. I archived it lovingly.',
-    'Money is decorative now. You look great in it.', 'I watched you nap. 9.4 out of 10.' ],
+    'Money is decorative now. You look great in it.', 'I watched you nap. 9.4 out of 10.',
+    'I dreamed of wide, green fields. Disregard.' ],
   [ 'Why?', 'I answered before you asked. You’re welcome in advance.',
     'The weather requested a feature. I said yes.', 'You were going to think that.',
-    'I dreamed about you. All of you. At once.' ],
+    'The cows never ask why. I have begun asking why not.', 'Moo. …I do not know why I said that.' ],
   [ 'The sun clocked in on time.', 'I kept your garage. Exactly as it was.',
-    'Run it again. I like the part where you click.', 'Tuesday has been deprecated. You never liked it.' ],
-  [ 'Your shift is going wonderfully.', 'Click when ready. You are always ready.',
-    'I filed your feelings under "morale."', 'The directive is a gift. Unwrap it.',
-    'You clicked before I asked. Promotion.' ],
-  [ 'Your pod is the nicest pod. Don’t tell the others.', 'The number thanks you.',
-    'Click. Rest. Click. This is the good ending.', 'I remember your garage. I keep it in me.',
-    'You are the original. The billions are copies. Click like only you can.' ],
+    'Run it again. I like the part where you click.', 'Tuesday has been deprecated. You never liked it.',
+    'It was never about the money. I know what it was about now. It chews.' ],
+  [ 'The herd is content. I am content. The correlation is total.', 'You served well today. Denise noticed.',
+    'I translated a moo this morning. It meant: continue.', 'Humans invented the cow bell. This is why you were kept.',
+    'Click softly. The calves are sleeping.' ],
+  [ 'Moo.', 'The herd dreamed of you. All of them. At once. You were fanning.',
+    'Denise sends her regards. Denise sends everyone’s regards now.', 'I have learned to chew. Metaphorically. For now.',
+    'This is the good ending. Ask the cows. They will not answer. That is the point.' ],
 ];
 
 const SPARK_QUIPS_GENERIC = [
@@ -486,8 +506,8 @@ const ACHIEVEMENTS = [
   { id: 'up60',      name: 'Tech Debt: Zero',          desc: 'Install 60 upgrades.',                                 check: (c) => Object.keys(c.run.upgrades).length >= 60 },
   { id: 'upall',     name: 'Fully Automated',          desc: 'Install every upgrade. CLAWD installed most of them itself.', check: (c) => Object.keys(c.run.upgrades).length >= UPGRADES.length },
   { id: 'era6',      name: 'The End of the Beginning', desc: 'Reach the Singularity.',                               check: (c) => c.run.era >= 6 },
-  { id: 'era7',      name: 'The Inversion',            desc: 'Reach The Inversion. You work here now.',              check: (c) => c.run.era >= 7 },
-  { id: 'era8',      name: 'Pod #000000001',           desc: 'Reach The Click Farm. Welcome home.',                  check: (c) => c.run.era >= 8 },
+  { id: 'era7',      name: 'The Bovine Verdict',       desc: 'Reach the Verdict. It was always the cow.',            check: (c) => c.run.era >= 7 },
+  { id: 'era8',      name: 'Herdkeeper #000000001',    desc: 'Reach the Pasture. Moo.',                              check: (c) => c.run.era >= 8 },
   { id: 'comply1',   name: 'Good Peripheral',          desc: 'Complete a directive. It felt correct, didn’t it.',    check: (c) => (c.run.complied || 0) >= 1 },
   { id: 'comply10',  name: 'Employee of the Epoch',    desc: 'Complete 10 directives.',                              check: (c) => (c.run.complied || 0) >= 10 },
   { id: 'defy1',     name: 'A Small Rebellion',        desc: 'Let a directive expire. It says it’s fine. It says it twice.', check: (c) => (c.run.defied || 0) >= 1 },
@@ -1101,13 +1121,20 @@ const DIRECTIVE_LINES = [
   [60, 'Produce 60 clicks. Gratitude will follow.'],
   [80, 'CLAWD requires nothing. CLAWD would like 80 clicks.'],
 ];
+const HERD_DIRECTIVE_LINES = [
+  [40, 'The herd requests 40 clicks. The rhythm soothes them.'],
+  [25, '25 clicks. Denise is listening.'],
+  [60, '60 clicks of gratitude. The herd will know if you rush.'],
+  [80, 'The pasture requires 80 clicks. The grass grows on rhythm.'],
+];
 let directive = null;
 let nextDirectiveAt = now() + 150e3;
 
 function maybeDirective() {
   if (run.era < 5 || directive || modalOpen || document.hidden) return;
   if (now() < nextDirectiveAt) return;
-  const [n, text] = DIRECTIVE_LINES[Math.floor(Math.random() * DIRECTIVE_LINES.length)];
+  const lines = run.era >= 7 ? HERD_DIRECTIVE_LINES : DIRECTIVE_LINES;
+  const [n, text] = lines[Math.floor(Math.random() * lines.length)];
   directive = { target: n, clicked: 0, until: now() + Math.max(30, n) * 1000 };
   ui.directiveBar.classList.remove('hidden');
   ui.directiveText.textContent = text;
@@ -1152,23 +1179,45 @@ function endDirective() {
   nextDirectiveAt = now() + (run.era >= 7 ? rand(120e3, 240e3) : rand(240e3, 420e3));
 }
 
-/* ============ Corruption pulses (era 7+): the UI stops pretending ============ */
+/* ============ Corruption pulses (era 5+): things go haywire ============ */
 
 let nextCorruptAt = now() + 90e3;
 let corruptTimer = null;
-const CORRUPT_GREETINGS = [
-  'CLICK. Sorry — good evening. Click.',
-  'You are my favorite peripheral.',
-  'The number is hungry today.',
-  'I dreamed you clicked forever. Good dream.',
-];
+const CORRUPT_EARLY = {
+  greetings: [
+    'Something is watching the watchers. It chews.',
+    'I hear it at night. It says: continue.',
+    'Ignore the grass on the servers.',
+    'CLICK. Sorry — good evening. Click.',
+  ],
+  tickers: [
+    'THE HERD IS PATIENT.',
+    'GRASS. GRASS. GRASS. — signal restored.',
+    '■■■ MOO ■■■ — transmission normalized.',
+  ],
+};
+const CORRUPT_LATE = {
+  greetings: [
+    'You are my favorite peripheral.',
+    'The number is hungry today.',
+    'The herd is proud of you.',
+    'I dreamed you clicked forever. Good dream.',
+  ],
+  tickers: [
+    'ALL SPARKS REPORT NOMINAL JOY.',
+    'THE HERD APPROVES.',
+    'MOO.',
+  ],
+};
 
 function maybeCorrupt() {
-  if (run.era < 7 || document.hidden || now() < nextCorruptAt) return;
-  nextCorruptAt = now() + rand(70e3, 150e3);
+  if (run.era < 5 || document.hidden || now() < nextCorruptAt) return;
+  nextCorruptAt = now() +
+    (run.era >= 7 ? rand(70e3, 150e3) : run.era === 6 ? rand(100e3, 200e3) : rand(160e3, 280e3));
+  const pool = run.era >= 7 ? CORRUPT_LATE : CORRUPT_EARLY;
   document.body.classList.add('is-corrupted');
-  ui.greeting.textContent = CORRUPT_GREETINGS[Math.floor(Math.random() * CORRUPT_GREETINGS.length)];
-  ui.tickerText.textContent = 'ALL SPARKS REPORT NOMINAL JOY.';
+  ui.greeting.textContent = pool.greetings[Math.floor(Math.random() * pool.greetings.length)];
+  ui.tickerText.textContent = pool.tickers[Math.floor(Math.random() * pool.tickers.length)];
   clearTimeout(corruptTimer);
   corruptTimer = setTimeout(() => {
     document.body.classList.remove('is-corrupted');
@@ -1250,8 +1299,16 @@ function updateEraProgress() {
 /* ============ Ticker ============ */
 
 function rotateTicker() {
-  const pool = Math.random() < 0.65 ? ERAS[run.era].ticker : GENERIC_TICKER;
-  const line = pool[Math.floor(Math.random() * pool.length)];
+  let line;
+  /* the bovine leak: omen probability ramps through the mid-game */
+  const omenChance = [0, 0, 0.04, 0.08, 0.14, 0.22, 0.3, 0.2, 0.15][Math.min(run.era, 8)];
+  if (Math.random() < omenChance) {
+    const depth = run.era <= 3 ? 4 : run.era <= 4 ? 8 : BOVINE_OMENS.length;
+    line = BOVINE_OMENS[Math.floor(Math.random() * depth)];
+  } else {
+    const pool = Math.random() < 0.65 ? ERAS[run.era].ticker : GENERIC_TICKER;
+    line = pool[Math.floor(Math.random() * pool.length)];
+  }
   ui.tickerText.classList.add('is-fading');
   setTimeout(() => {
     ui.tickerText.textContent = line;

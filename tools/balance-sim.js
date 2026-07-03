@@ -35,7 +35,7 @@ const MOMENTUM_MULT = 2.5; /* sustained clicker holds full momentum */
 const ERAS = [
   ['Garage', 0], ['Startup', 50e3], ['Corporation', 5e6], ['Automation Age', 250e6],
   ['Post-Labor', 15e9], ['Awakening', 1e12], ['Singularity', 75e12],
-  ['Inversion', 5e15], ['Click Farm', 1e18],
+  ['Bovine Verdict', 5e15], ['The Pasture', 1e18],
 ];
 
 /* ---- player model ---- */

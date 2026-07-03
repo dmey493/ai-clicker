@@ -262,10 +262,11 @@ body[data-era="6"] .halo-orbit1 { animation-duration: 7s; }
 body[data-era="6"] .halo-orbit2 { animation-duration: 11s; }
 body[data-era="7"] .halo-orbit1 { animation-duration: 5s; }
 body[data-era="7"] .halo-orbit2 { animation-duration: 8s; }
-body[data-era="8"] .halo-orbit1 { animation-duration: 2.6s; }
-body[data-era="8"] .halo-orbit2 { animation-duration: 4s; }
-body[data-era="8"] .halo-glyphs { animation-duration: 18s; }
-body[data-era="8"] .h-core { fill: #D6493C; }
+body[data-era="7"] .h-core { fill: #D6493C; }
+body[data-era="8"] .halo-orbit1 { animation-duration: 16s; }
+body[data-era="8"] .halo-orbit2 { animation-duration: 24s; }
+body[data-era="8"] .halo-glyphs { animation-duration: 100s; }
+body[data-era="8"] .h-core { fill: #7FA85C; }
 
 @keyframes spin-rev { to { rotate: -360deg; } }
 
@@ -279,11 +280,12 @@ body[data-era="4"] { --spark-glow: 34px; --spark-glow-a: 0.42; }
 body[data-era="5"] { --spark-glow: 40px; --spark-glow-a: 0.5; }
 body[data-era="6"] { --spark-glow: 48px; --spark-glow-a: 0.6; }
 body[data-era="7"] { --spark-glow: 54px; --spark-glow-a: 0.68; }
-body[data-era="8"] { --spark-glow: 62px; --spark-glow-a: 0.8; }
 body[data-era="5"] .spark-svg { animation: breathe 4.5s ease-in-out infinite, spin 90s linear infinite; }
 body[data-era="6"] .spark-svg { animation: breathe 3s ease-in-out infinite, spin 45s linear infinite; }
 body[data-era="7"] .spark-svg { fill: #CE5A38; animation: breathe 2.2s ease-in-out infinite, spin 22s linear infinite; }
-body[data-era="8"] .spark-svg { fill: #C64B2E; animation: breathe 1.4s ease-in-out infinite, spin 9s linear infinite; }
+/* era 8, the Pasture: the frenzy is over — vast, warm, unsettlingly serene */
+body[data-era="8"] { --spark-glow: 64px; --spark-glow-a: 0.55; }
+body[data-era="8"] .spark-svg { fill: #D97757; animation: breathe 5.5s ease-in-out infinite, spin 80s linear infinite; }
 
 @keyframes spin { to { rotate: 360deg; } }
 
