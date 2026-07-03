@@ -15,9 +15,13 @@ server. No install, no build step, no dependencies.
 - **Install upgrades** — the small tiles above the automation list. Hover for details.
 - **Claim breakthroughs** — a golden spark drifts by every couple of minutes. Click it for
   windfalls, ×7 production frenzies, or ×777 click storms.
-- **Watch the story unfold** — the news wire and the transmission log escalate through seven
+- **Watch the story unfold** — the news wire and the transmission log escalate through nine
   eras as your all-time earnings grow: The Garage → The Startup → The Corporation →
-  The Automation Age → The Post-Labor Era → The Awakening → The Singularity.
+  The Automation Age → The Post-Labor Era → The Awakening → The Singularity → and two more
+  that are best discovered in person. A word of advice for the late game: when CLAWD issues
+  a directive, it is polite to comply. The "polite" is decorative.
+- **See your empire** — every automation you own appears as a live animated 8-bit strip
+  under the news wire, row after row, like a factory floor filling in.
 - **Walk your factory** — "Enter the Facility" opens an 8-bit factory floor with every
   automation you own as animated pixel machinery. WASD / arrows to walk (on-screen D-pad
   on phones), Esc or "Leave the floor" to exit. The decor gets… less reassuring as the
